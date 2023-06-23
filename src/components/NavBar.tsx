@@ -1,5 +1,5 @@
 import { HStack, Image } from "@chakra-ui/react";
-import logo from '../assets/forest.png'
+import logo from '../assets/logo.png'
 import ThemeSwitch from "./ThemeSwitch";
 import SearchInput from "./SearchInput";
 
