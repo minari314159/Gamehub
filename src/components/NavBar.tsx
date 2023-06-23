@@ -3,11 +3,15 @@ import logo from '../assets/forest.png'
 import ThemeSwitch from "./ThemeSwitch";
 import SearchInput from "./SearchInput";
 
-const NavBar = () => {
+interface Props {
+  onSearch: (searchText: string) => void;
+}
+
+const NavBar = ({onSearch} : Props) => {
   return (
    <HStack padding='15px'>
     <Image src={logo} boxSize='60px'/>
-    <SearchInput />
+    <SearchInput onSearch={onSearch}/>
     <ThemeSwitch />
    </HStack>
   )
