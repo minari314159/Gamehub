@@ -1,11 +1,10 @@
+import { useQuery } from "@chakra-ui/react";
 import { GameQuery } from "../App";
-import useData from "./useDate";
 
-export interface Platform {
-  id: number;
-  name: string;
-  slug: string;
-}
+import APIClient, { FetchResponse } from "../services/apiClient";
+import { Platform } from "./usePlatform";
+
+const apiClient = new APIClient<Games>('/games');
 export interface Games {
   id: number;
   name: string;
@@ -15,18 +14,19 @@ export interface Games {
   rating_top: number;
 }
 
-const useGames = (
-gameQuery: GameQuery
-) =>
-  useData<Games>(
-    "/games",
-    { params:{ 
-      genres: gameQuery.genre?.id, 
-      platform: gameQuery.platform?.id,
-      ordering: gameQuery.sortOrder,
-      search: gameQuery.searchText
-   } },
-    [gameQuery]
-  );
+const useGames = (gameQuery: GameQuery) =>
+  useQuery<FetchResponse, Error>({
+    queryKey: ['games', gameQuery],
+    queryFn: () => apiClient
+      .getAll ({
+        params:{ 
+          genres: gameQuery.genre?.id, 
+          parent_platforms: gameQuery.platform?.id,
+          ordering: gameQuery.sortOrder,
+          search: gameQuery.searchText
+      },
+    })
+
+  });
 
 export default useGames;
