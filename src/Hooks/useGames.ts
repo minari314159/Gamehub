@@ -1,8 +1,8 @@
-import { useQuery } from "@chakra-ui/react";
 import { GameQuery } from "../App";
 
 import APIClient, { FetchResponse } from "../services/apiClient";
 import { Platform } from "./usePlatform";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 const apiClient = new APIClient<Games>('/games');
 export interface Games {
@@ -15,18 +15,21 @@ export interface Games {
 }
 
 const useGames = (gameQuery: GameQuery) =>
-  useQuery<FetchResponse, Error>({
+  useInfiniteQuery<FetchResponse<Games>, Error>({
     queryKey: ['games', gameQuery],
-    queryFn: () => apiClient
+    queryFn: ({pageParam = 1}) => apiClient
       .getAll ({
         params:{ 
           genres: gameQuery.genre?.id, 
           parent_platforms: gameQuery.platform?.id,
           ordering: gameQuery.sortOrder,
-          search: gameQuery.searchText
+          search: gameQuery.searchText,
+          page: pageParam,
       },
-    })
-
+    }),
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.next ? allPages.length + 1 : undefined;
+    }
   });
 
 export default useGames;
