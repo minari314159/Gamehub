@@ -6,7 +6,11 @@ interface Props{
 }
 const CardContainer = ({children}: Props) => {
   return (
-    <Box borderRadius={10} overflow="hidden" width='100%'>
+    <Box _hover={{
+      transform: 'scale(1.04)',
+      transition: 'transform .15s ease-in'
+    }} 
+    borderRadius={10} overflow="hidden" width='100%'>
         {children}
     </Box>
   )
